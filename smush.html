@@ -31,7 +31,7 @@ You might think console is a table, log is a function and "Hello"  is a string. 
 - console "log" "Hello"
 - console.log.Hello
 
-What's happening here? console is a function that is called with the string "log" . This returns another function which is called with the string "Hello".
+What's happening here? console is a function that is called with the string "log". This returns another function which is called with the string "Hello".
 
 <h2>Tour</h2>
 
@@ -58,14 +58,14 @@ The following characters cannot be used at all:
 
 In addition, the following tokens cannot be used, although their characters can be used in other identifiers (like how for is not a valid identifier in many languages, but fork is):
 
-- comment prefix # (followed by N hashes)
+- comment prefix #
 - wordlike string prefix .
 - statement terminator ;
 - field terminator ,
-- declaration operator / case separator :
-- assignment operator =
+- binding operators = and :
 - function operator ->
 - return operator <-
+- spread / rest operator ...
 
 <h3>Expressions.</h3> As functions in Smush accept exactly one argument, you call them by writing a parameter after them. foo val  calls foo with the argument val. foo bar baz calls foo with bar, then calls the result with baz.
 
@@ -73,9 +73,9 @@ All Smush expressions follow this pattern. Consider 1 + 2: + is a global variabl
 
 Note that Smush functions are all left associative and have no concept of operator precedence. (Which makes sense, it has no concept of operators either.) 1 + 2 * 3 in Smoosh will return 9, if you want it to work "normally" you should use 1 + (2 * 3). It's clearer anyway.
 
-<h3>Binding Expressions</h3> (a = 3 or b: 4) creates a "variable" in the current scope and assign it a value. The = and : are interchangeable. The right-hand-side of binding expressions is evaluated eagerly.
+<h3>Binding Expressions</h3> (a = 3 or b: 4) creates a "variable" in the current scope and assign it a value. The = and : are interchangeable.
 
-<h3>Immutable.</h3>  The binding operator is not an assignment operator; Smush values are immutable. Identifiers in an outer scope can be read but not updated. Table properties can be read but not updated.
+<h3>Immutable.</h3>  The binding operator is not an assignment operator; Smush values are immutable. Identifiers in an outer scope can be read from closures, but cannot be updated. Table properties can be read but not updated.
 
 <h3>Destructuring Expression.</h3> The left-hand-side of a binding expression can be a destructuring expression. (x: x, y: y) = (x: 3, y: 4) and (x, y) = (3, 4) both result in x = 3 and y = 4.
 
@@ -83,13 +83,17 @@ You can have your cake and destructure it too: (foo: (bar: b) f) binds the subta
 
 <h3>Spread / Rest.</h3> The ... expression syntax performs spread (in normal blocks) and rest (in destructuring blocks).
 
-<h3>Property shorthand.<h3> When a local binding has the same name as a property in a table, you can use a shorthand: (:x, :y) for table construction and (:x, :y) = (x: 3, y: 4) for destructuring.
-
-<h3>Conditionals and loops</h3> are the equivalent of if / else, and uses the ternary operator syntax condition ? thenExpression : elseExpression . Null and the false symbol are falsy, everything else including 0 and ' is truthy. The elseExpression is optional, and if omitted evaluates to null.
+<h3>Property shorthand.<h3> When a local binding has the same name as a property in a table, you can use a shorthand: (:x, :y) for table construction and (:x, :y) = (x: 3, y: 4) for destructuring. Either binding operator (= or :) may be used.
 
 <h3>Function Expression.</h3> For example, x -> x * x specifies a function. The left-hand-side can be a destructuring or matching expression.
 
-<h3>Case Functions.</h3> Functions may be "joined" together to create a new function using the case separator : . The matching expressions are tried in order until one matches, then the corresponding body is evaluated.
+<h3>Conditionals and loops</h3> are provided by standard library functions that are implemented in the interpreter. Note that lazily evaluated expressions such as loop bodies and conditional branches must be function expressions, i.e.
+
+if condition thenFn elseFn
+
+<h3>Promises and streams<h3> are also implemented in the standard library, using a thunk/callback pattern.
+
+readfile 'example.log' (err, value) -> { ... do things }
 
 <h3>Blocks</h3> The symbols ()[]{} define blocks. Blocks may contain:
 
