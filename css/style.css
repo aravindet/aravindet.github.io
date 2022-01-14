@@ -1,11 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i&display=swap&subset=latin-ext');
 
 body {
-	white-space: pre-wrap;
-	max-width: 50em;
-	padding: 4em 2em;
+	padding: 4rem 2rem;
 	margin: 0 auto;
 	font: 300 15px/19px 'IBM Plex Mono',monospace;
+	display: flex;
+	flex-flow: row;
+}
+
+nav {
+	width: 25rem;
+	flex: 0 0 auto;
+}
+
+main {
+	max-width: 50rem;
+	flex: 1 1 0;
 }
 
 table,th,td {
@@ -16,7 +26,6 @@ h1,h2,h3,h4,h5,h6 {
 	font: inherit;
 	padding: 0;
 	margin: 0;
-	display: inline;
 }
 
 h1 { font-weight: 700; }
@@ -30,7 +39,6 @@ th {
 	font-weight: 500;
 }
 td {
-	white-space: pre-wrap;
 	vertical-align: top;
 }
 ul,ol {
@@ -39,8 +47,9 @@ ul,ol {
 	padding: 0;
 }
 li {
-	display: list-item;
 	margin-bottom: -19px;
-	white-space: pre-wrap;
-	list-style-type: decimal;
+}
+
+nav li {
+	list-style-type: none;
 }
