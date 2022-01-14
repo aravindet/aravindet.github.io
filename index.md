@@ -1,5 +1,5 @@
 ---
-title: Aravind
+title: aravind.rs
 ---
 
 # Projects
