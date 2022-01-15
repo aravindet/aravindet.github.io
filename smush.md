@@ -1,8 +1,9 @@
-<link rel="stylesheet" type="text/css" href="./style.css">
-<title>Smush</title>
-<h1><a href='index.html'>Home</a> > Smush</h1>
+---
+title: Smush
+---
 
-<blockquote>This is just an idea for a programming language. There is no implementation yet.</blockquote>
+
+> This is just an idea for a programming language. There is no implementation yet.
 
 Smush is a tiny programming language intended for embedding in other programs. This places it in the same general space as Lua. The design goals are:
 
@@ -21,27 +22,27 @@ It is tiny because it is designed to have a very small interpreter as a result o
 - There are strings and numbers. They are special tables.
 - There are symbols and null. They are ordinary tables.
 
-<h2>Introduction</h2>
+# Introduction
 
 Consider the expression console.log("Hello"). This is valid Smush.
 
 You might think console is a table, log is a function and "Hello"  is a string. You'd be right, but the lines between those things are a bit blurry. The same statement could also be written as:
 
-- console["log"]("Hello")
-- console "log" "Hello"
-- console.log.Hello
+- `console["log"]("Hello")`
+- `console "log" "Hello"`
+- `console.log.Hello`
 
 What's happening here? console is a function that is called with the string "log". This returns another function which is called with the string "Hello".
 
-<h2>Tour</h2>
+# Tour
 
-<h3>Strings</h3>. There are a few ways to write string literals:
+**Strings**. There are a few ways to write string literals:
 
 - 'Hello' and "Hello" work as expected
 - .Hello works for simple wordlike strings (defined later)
 - 'Hello', "Hello", "'Hello'" etc. because why not.
 
-<h3>Parentheses.</h3> Incidentally, (parens), [brackets] and {braces} are all interchangeable and have no semantic difference:
+**Parentheses.** Incidentally, (parens), [brackets] and {braces} are all interchangeable and have no semantic difference:
 
 - ("Hello") and ['Hello'] are the same as "Hello"
 - [ 1, 2, foo: 3 ] is the same as ( 1, 2, foo: 3 )
@@ -49,7 +50,7 @@ What's happening here? console is a function that is called with the string "log
 
 More about this later in the section on blocks.
 
-<h3>Identifiers.</h3> Smush identifier names can be either wordlike ([a-z_][a-z0-9_]*) or symbolike  (composed entirely of punctuation) but cannot mix words and punctuation. All wordlike strings are valid identifiers - there are no reserved keywords. However symbolike identifiers are more restricted.
+**Identifiers.** Smush identifier names can be either wordlike ([a-z_][a-z0-9_]*) or symbolike  (composed entirely of punctuation) but cannot mix words and punctuation. All wordlike strings are valid identifiers - there are no reserved keywords. However symbolike identifiers are more restricted.
 
 The following characters cannot be used at all:
 
@@ -67,35 +68,35 @@ In addition, the following tokens cannot be used, although their characters can 
 - return operator <-
 - spread / rest operator ...
 
-<h3>Expressions.</h3> As functions in Smush accept exactly one argument, you call them by writing a parameter after them. foo val  calls foo with the argument val. foo bar baz calls foo with bar, then calls the result with baz.
+**Expressions.** As functions in Smush accept exactly one argument, you call them by writing a parameter after them. foo val  calls foo with the argument val. foo bar baz calls foo with bar, then calls the result with baz.
 
 All Smush expressions follow this pattern. Consider 1 + 2: + is a global variable containing a symbol ( an empty table that does nothing except being different from all other tables). The number 1  is called with this symbol as argument. That returns the addition function, which is then called with the number 2.
 
 Note that Smush functions are all left associative and have no concept of operator precedence. (Which makes sense, it has no concept of operators either.) 1 + 2 * 3 in Smoosh will return 9, if you want it to work "normally" you should use 1 + (2 * 3). It's clearer anyway.
 
-<h3>Binding Expressions</h3> (a = 3 or b: 4) creates a "variable" in the current scope and assign it a value. The = and : are interchangeable.
+**Binding Expressions** (a = 3 or b: 4) creates a "variable" in the current scope and assign it a value. The = and : are interchangeable.
 
-<h3>Immutable.</h3>  The binding operator is not an assignment operator; Smush values are immutable. Identifiers in an outer scope can be read from closures, but cannot be updated. Table properties can be read but not updated.
+**Immutable.**  The binding operator is not an assignment operator; Smush values are immutable. Identifiers in an outer scope can be read from closures, but cannot be updated. Table properties can be read but not updated.
 
-<h3>Destructuring Expression.</h3> The left-hand-side of a binding expression can be a destructuring expression. (x: x, y: y) = (x: 3, y: 4) and (x, y) = (3, 4) both result in x = 3 and y = 4.
+**Destructuring Expression.** The left-hand-side of a binding expression can be a destructuring expression. (x: x, y: y) = (x: 3, y: 4) and (x, y) = (3, 4) both result in x = 3 and y = 4.
 
 You can have your cake and destructure it too: (foo: (bar: b) f) binds the subtable containing bar to f , while also binding the value of bar to b.
 
-<h3>Spread / Rest.</h3> The ... expression syntax performs spread (in normal blocks) and rest (in destructuring blocks).
+**Spread / Rest.** The ... expression syntax performs spread (in normal blocks) and rest (in destructuring blocks).
 
-<h3>Property shorthand.<h3> When a local binding has the same name as a property in a table, you can use a shorthand: (:x, :y) for table construction and (:x, :y) = (x: 3, y: 4) for destructuring. Either binding operator (= or :) may be used.
+**Property shorthand.** When a local binding has the same name as a property in a table, you can use a shorthand: (:x, :y) for table construction and (:x, :y) = (x: 3, y: 4) for destructuring. Either binding operator (= or :) may be used.
 
-<h3>Function Expression.</h3> For example, x -> x * x specifies a function. The left-hand-side can be a destructuring or matching expression.
+**Function Expression.** For example, x -> x * x specifies a function. The left-hand-side can be a destructuring or matching expression.
 
-<h3>Conditionals and loops</h3> are provided by standard library functions that are implemented in the interpreter. Note that lazily evaluated expressions such as loop bodies and conditional branches must be function expressions, i.e.
+**Conditionals and loops** are provided by standard library functions that are implemented in the interpreter. Note that lazily evaluated expressions such as loop bodies and conditional branches must be function expressions, i.e.
 
 if condition thenFn elseFn
 
-<h3>Promises and streams<h3> are also implemented in the standard library, using a thunk/callback pattern.
+**Promises and streams** are also implemented in the standard library, using a thunk/callback pattern.
 
 readfile 'example.log' (err, value) -> { ... do things }
 
-<h3>Blocks</h3> The symbols ()[]{} define blocks. Blocks may contain:
+**Blocks** The symbols ()[]{} define blocks. Blocks may contain:
 
 - Statements. Expressions terminated by a ;
 - Return statement with an optional value, e.g. <- 3;
@@ -104,9 +105,9 @@ readfile 'example.log' (err, value) -> { ... do things }
 
 Blocks are expressions, and return a value when evaluated.
 
-<h4>Single expression blocks</h4> return the value of that expression. For example, (3) returns 3.
+**Single expression blocks** return the value of that expression. For example, (3) returns 3.
 
-<h4>Explicit return values</h4> work as expected. { a: 1 + 2; <- a } returns 3.
+**Explicit return values** work as expected. { a: 1 + 2; <- a } returns 3.
 
 Table builder block. In all other cases, the block returns a table with all the evaluated field declarations. Any unterminated final expression is treated as a field.
 
@@ -118,9 +119,10 @@ Table builder block. In all other cases, the block returns a table with all the 
 
 Note that the use of {} for maplike tables and [] for listlike tables is merely convention.
 
-<h3>Modules.</h3> An entire source file is considered a block. Source files can contain a single expression to return it, or can define multiple fields.
+**Modules.** An entire source file is considered a block. Source files can contain a single expression to return it, or can define multiple fields.
 
-<h2>Example program</h2>
+```
+# Example program
 
 # This program prints four random digits between 1 and 9 (inclusive,
 # repetition allowed) and prompts the user for an input.
@@ -169,11 +171,13 @@ log(
   stack[0] != 24 ? ('Result is ' + stack[0] + ', not 24.') :
   'Correct!'
 );
+```
 
-<h2>Grammar</h2>
+# Grammar
 
 This is just an early draft using the <a href="https://www.google.com/url?q=https://pest-parser.github.io/?bin%3D11yczz%23editor&amp;sa=D&amp;ust=1590658544763000">PEST Parser Editor</a>
 
+```
 WHITESPACE = _{ PATTERN_WHITE_SPACE }
 COMMENT = _{ "#" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
 reserved_punct = _{ "(" | "[" | "{" | "\" | "'" | "}" | "]" | ")" }
@@ -209,10 +213,12 @@ bindable = { identifier | dest_block }
 call_expression = { valuable+ }
 binding_expression = { bindable ~ ("=" | ":") ~ expression }
 expression = {  binding_expression | call_expression }
+```
 
-<h2>Smush by example</h2>
+# Smush by example
 
-<blockquote>These were written to an earlier draft and need to be updated.</blockquote>
+> These were written to an earlier draft and need to be updated.
+
 
 <table>
 <tbody>

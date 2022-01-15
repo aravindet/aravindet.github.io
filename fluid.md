@@ -1,8 +1,8 @@
-<link rel="stylesheet" type="text/css" href="./style.css">
-<title>Fluid Layout</title>
-<h1><a href='index.html'>Home</a> > Fluid Layout</h1>
+---
+<title: Fluid Layout
+---
 
-<h2>Introduction</h2>
+# Introduction
 
 CSS has several layout modes. Per <a href='https://developer.mozilla.org/en-US/docs/Web/CSS/Layout_mode' target='_blank'>MDN</a>:
 
@@ -20,17 +20,17 @@ The generality allows it to represent layouts that are not possible using CSS, s
 
 The goal is to create an (1) engine that implements Fluid Layout, and (2) a set of transformations that can convert any valid CSS layout into the equivalent Fluid Layout.
 
-<h2>Overview</h2>
+# Overview
 
 The Fluid Layout engine accepts a tree of nodes (like the DOM) and computes, for each node, the coordinates of the rectangle it should should occupy on the screen.
 
 Each node might have certain properties that influence how it is rendered. Two sets of properties are relevant to Fluid Layout:
 
-<h3>flow</h3> on a parent node controls how its children are positioned within it.
+**flow** on a parent node controls how its children are positioned within it.
 
-<h3>place</h3> on a child node controls how it is placed and sized relative to its parent and neighbours.
+**place** on a child node controls how it is placed and sized relative to its parent and neighbours.
 
-<h2>Flow</h2>
+# Flow
 
 The flow property may have the value 'yield' if it does not create a new layout context but allows its children to be laid out along its parent's layout context.
 
@@ -44,7 +44,7 @@ Tracks of an axis may cross those of other axes to form grids. Each axis may spe
 
 For example, a wrapping normal layout has two axes. The first axis does not cross the second (words on separate lines do not align vertically), but the second one crosses the first (all words on a line align horizontally).
 
-<h3>Definition</h3>
+## Definition
 
 flow: 'yield' | [ {
   direction: 'fore' | 'back' | 'left' | 'right' | 'up' | 'down'
@@ -59,7 +59,7 @@ flow: 'yield' | [ {
   crosses: [ integer ]
 } ]
 
-<h2>Place</h2>
+# Place
 
 By default, children are placed in the same order as they appear in the tree. This can be overridden using the order property, just like in Flex layout. The default value is 'auto'. If order is 'none', the item will be placed in the earliest available flow position; this is similar to the dense option in Grid layout.
 
@@ -71,7 +71,7 @@ The position property renders the child outside its normal location in the flow,
 
 The wrap_before and wrap_after properties control whether this item (or the succeeding item) advances to the next track on each axis. For each axis, it may be 'never', 'always' or a wrapping cost represented by a unitless number.
 
-<h3>Definition</h3>
+## Definition
 
 place: {
   order: 'auto' | integer
@@ -94,7 +94,7 @@ length = {
 }
 
 
-<h2>Questions</h2>
+# Questions
 
 Tracks can only be auto-spawned in the wrap direction.
 No: tables - requires explicit wrap points
