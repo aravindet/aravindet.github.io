@@ -32,11 +32,13 @@ The number of bors since the Boring Epoch<sup>2</sup> is the Absolute Boring Tim
 
 This line was written on 15 January 2022 at 00:34, or Boring Time 12022.015.003.
 
+<input type='datetime-local' id='gregorious' /> -> <input id='boring' />
 <script>
+    document.querySelector('#gregorious').addEventListener('input', toBoring);
     function toBoring(event) {
         console.log(event.target.value);
         const t = Date.parse(event.target.value);
-        const T = t / 675000 + 559656221;
+        const T = t / 675000 + 559609472;
         const Y = Math.floor(T / 46751);
         const D = Math.floor(T / 128) - Math.floor(Y * 46751 / 128);
         const B = T % 128;
@@ -45,7 +47,6 @@ This line was written on 15 January 2022 at 00:34, or Boring Time 12022.015.003.
         document.querySelector('#boring').value = boring;
     }
 </script>
-<input type='datetime-local' onchange='toBoring' /> -> <input id='boring' readonly />
 
 Compared to our current time system, there are a few key differences in when the day or year advances.
 
