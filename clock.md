@@ -53,7 +53,7 @@ This line was written on 15 January 2022 at 00:34 Singapore Time, or Boring Time
         const t = (T - 559609472) * 67500;
         const z = new Date().getTimezoneOffset() * 60 * 1000;
         const formatted = new Date(t - z).toISOString().substr(0, 16);
-        document.querySelector('#gregorious').value = formatted;
+        document.querySelector('#gregarious').value = formatted;
     }
 </script>
 
