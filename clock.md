@@ -30,27 +30,36 @@ The number of bors since the Boring Epoch<sup>2</sup> is the Absolute Boring Tim
 - Day, integer between 0 and 365 or 366
 - Bor, real number between 0 (inclusive) and 128 (exclusive)
 
-This line was written on 15 January 2022 at 00:34, or Boring Time 12022.015.003.
+This line was written on 15 January 2022 at 00:34 Singapore Time, or Boring Time 12022.014.088.
 
-<input type='datetime-local' id='gregorious' /> -> <input id='boring' />
+<input type='datetime-local' id='gregarious' /> -> <input id='boring' />
 <script>
-    document.querySelector('#gregorious').addEventListener('input', toBoring);
+    document.querySelector('#gregarious').addEventListener('input', toBoring);
+    document.querySelector('#boring').addEventListener('input', toGregarious);
+    //
     function toBoring(event) {
-        console.log(event.target.value);
         const t = Date.parse(event.target.value);
         const T = t / 675000 + 559609472;
         const Y = Math.floor(T / 46751);
         const D = Math.floor(T / 128) - Math.floor(Y * 46751 / 128);
-        const B = T % 128;
+        const B = (T % 128).toFixed(0).padStart(3, '0');
         const boring = `${Y}.${D}.${B}`;
-        console.log(boring);
         document.querySelector('#boring').value = boring;
+    }
+    //
+    function toGregarious(event) {
+        const [Y, D, B] = event.target.value.split('.').map((c) => parseInt(c));
+        const T = (Math.floor(Y * 46751 / 128) + D) * 128 + B;
+        const t = (T - 559609472) * 67500;
+        const z = new Date().getTimezoneOffset() * 60 * 1000;
+        const formatted = new Date(t - z).toISOString().substr(0, 16);
+        document.querySelector('#gregorious').value = formatted;
     }
 </script>
 
-Compared to our current time system, there are a few key differences in when the day or year advances.
+Compared to our current Gregorian (Gregarious?) time system, there are a few key differences in when the boring day and year advances.
 
-- At any moment, it is exactly the same Boring Time for everyone. There are no timezones. As a consequence, different locations on earth will develop different conventions on what's the appropriate Bor to wake up, go to work, etc.
+- At any moment, it is exactly the same Boring Time for everyone. There are no timezones or daylight saving. As a consequence, different locations on earth will develop different conventions on what's the appropriate Bor of day to wake up, go to work, etc.
 - The Day increments when the Bor hits 128. This means that for some parts of the world, the Day will increment during typical waking hours; people might go to work on Tuesday and return on Wednesday.
 - The Year increments at the moment when ABT is a multiple of 46,751. This "new years moment" will not, in general, coincide with the moment the Day increments.
 - The Day in which the Year increments is Day 365 (or 366) of the previous year until the new years moment, and Day 0 of the next year afterwards.
@@ -70,7 +79,7 @@ Given an ABT T,
 - Day of the week is `(floor(T / 128) + 5) * 7`,
  where 0 is Monday and 6 is Sunday. The 5 represents the fact that Jan 1 10,001 BCE was a Saturday.
 
-Given a Year, Day and Bor, ABT is `Year * 46751 + Day * 128 + Bor`. Time durations can also be converted into an equivalent number of Bors with the same formula, and manipulated with simple arithmetic.
+Given a Year, Day and Bor, ABT is `(floor(Year * 46751 / 128) + Day) * 128 + Bor`. Time durations can be converted into an equivalent number of Bors with the formula `Years * 46751 + Days * 128 + Bors` and manipulated with simple arithmetic.
 
 # FAQ
 
