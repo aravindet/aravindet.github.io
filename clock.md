@@ -41,14 +41,14 @@ This line was written on 15 January 2022 at 00:34 Singapore Time, or Boring Time
         const t = Date.parse(event.target.value);
         const T = t / 675000 + 559609472;
         const Y = Math.floor(T / 46751);
-        const D = Math.floor(T / 128) - Math.floor(Y * 46751 / 128);
+        const D = (Math.floor(T / 128) - Math.floor(Y * 46751 / 128)).toFixed(0).padStart(3, '0');
         const B = (T % 128).toFixed(0).padStart(3, '0');
         const boring = `${Y}.${D}.${B}`;
         document.querySelector('#boring').value = boring;
     }
     //
     function toGregarious(event) {
-        const [Y, D, B] = event.target.value.split('.').map((c) => parseInt(c));
+        const [Y, D, B] = event.target.value.split('.').map(function (c) { return parseInt(c); });
         const T = (Math.floor(Y * 46751 / 128) + D) * 128 + B;
         const t = (T - 559609472) * 67500;
         const z = new Date().getTimezoneOffset() * 60 * 1000;
