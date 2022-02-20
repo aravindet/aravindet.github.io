@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i&display=swap&subset=latin-ext');
 
+:root {
+	--bg: #fff;
+	--fg: #000;
+	--f2: #ddd;
+}
+
+@media (prefers-color-scheme:dark) {
+	:root {
+		--bg: #000;
+		--fg: #fff;
+		--f2: #666;	
+	}
+}
+
 body {
 	padding: 4rem 2rem;
 	margin: 0 auto;
@@ -7,12 +21,14 @@ body {
 	display: flex;
 	flex-flow: row;
 	justify-content: center;
+	background-color: var(--bg);
+	color: var(--fg)
 }
 
 nav {
 	width: 15rem;
 	flex: 0 0 auto;
-	border-right: 1px solid #ddd;
+	border-right: 1px solid var(--f2);
 	margin-right: 3rem;
 }
 
@@ -55,23 +71,23 @@ nav li {
 }
 
 a {
-	color: #000;
+	color: var(--fg);
 	text-decoration: underline;
 	font-weight: 400;
 }
 
 a:visited {
-	text-decoration-color: #ddd;
+	text-decoration-color: var(--f2);
 }
 
 input {
 	font: inherit;
-	border: 1px solid #000;
+	border: 1px solid var(--fg);
 	padding: 9px 19px;
 }
 
 h1.title {
 	margin-top: 19px;
 	margin-bottom: 18px;
-	border-bottom: 1px solid #000;
+	border-bottom: 1px solid var(--fg);
 }
