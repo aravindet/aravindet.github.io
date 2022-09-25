@@ -64,7 +64,7 @@ Compared to our current Gregorian (Gregarious?) time system, there are a few key
 - The Year increments at the moment when ABT is a multiple of 46,751. This "new years moment" will not, in general, coincide with the moment the Day increments.
 - The Day in which the Year increments is Day 365 (or 366) of the previous year until the new years moment, and Day 0 of the next year afterwards.
 
-<sup>2<sup> The Boring Epoch is set to January 1, 10,001 BCE at midnight UTC, so the Boring Year equals 10,000 + the CE year. See the [Holocene Calendar](https://en.wikipedia.org/wiki/Holocene_calendar).
+<sup>2</sup> The Boring Epoch is set to January 1, 10,001 BCE at midnight UTC, so the Boring Year equals 10,000 + the CE year. See the [Holocene Calendar](https://en.wikipedia.org/wiki/Holocene_calendar).
 
 ## Calculations
 
@@ -84,5 +84,5 @@ Given a Year, Day and Bor, ABT is `(floor(Year * 46751 / 128) + Day) * 128 + Bor
 # FAQ
 
 - **Q** Is this a serious proposal?
-  **A** No.
+- **A** No.
 
