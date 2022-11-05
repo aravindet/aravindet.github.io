@@ -8,81 +8,150 @@ The way humans keep time is unnecessarily complicated. Time should be more borin
 
 # Boring Time
 
-This is a method of measuring time and date with no timezones, daylight saving time, leap years, leap seconds and other weirdness.
+This is a method of measuring time and date that makes calculations dead simple. That means no timezones, daylight saving time, leap years, leap seconds and other weirdness.
 
 ## The Coincidence
 
-The ratio of the length of the year to day<sup>1</sup>, 365.2422, can be very closely approximated by the fraction 46,751 / 128. It's freakishly close, with an error under 0.000002%. We'll make use of this fact.
+The ratio of the lengths of the year and day<sup>1</sup>, 365.2422, can be very closely approximated by the fraction 46,751 / 128. We'll make use of this fact.
 
-<sup>1</sup> mean solar year to mean solar day.
+> For comparison, the Gregorian Calendar with its “leap year every 4 years, except every 100, except every 400” rule results in an average of 365.2425, which is a less accurate approximation.
 
-## Base unit
+<sup>1</sup> mean solar year to mean solar day. Due [precession](https://en.wikipedia.org/wiki/Precession#Astronomy) this ratio varies more than the error in the boring approximation.
 
-The base unit is the **bor**, which is exactly 675 SI seconds long. A boring day is 128 bors (86,400 seconds), and a boring year is 46,751 bors (31,556,925 seconds). 
+## Durations
 
-Note that these boring versions of the day and year are close enough to the real things that the difference won't matter for normal human affairs. For orbital mechanics and other reasons, the lengths of the actual day and year vary quite a bit more than the error here.
+- The base unit is the **bor**, which is exactly 675 SI seconds long.
+- Bors may be subdivided into millibors (0.675 seconds), microbors (675 microseconds), etc.
+- A day is 128 bors (86,400 seconds)
+- A week is 7 days, or 896 bors
+- A year is 46,751 bors (31,556,925 seconds)
+- There is no concept of months or quarters
 
-## Date and time
+Converting between these units uses normal multiplication and division. While it is well-defined to specify a duration as a combination of multiple units (like 2 years and 26 weeks), this is discouraged: just use decimals (2.5 years). 
 
-The number of bors since the Boring Epoch<sup>2</sup> is the Absolute Boring Time (ABT), written as a simple (albeit long) number. Boring Time can also be broken down into human friendly components separated by dots.
+## Date and Time
 
-- Year, integer; the year 2022 CE is Boring Year 12022
-- Day, integer between 0 and 365 or 366
-- Bor, real number between 0 (inclusive) and 128 (exclusive)
+The duration between a moment in time and the Boring Epoch (see below) is the Boring Timestamp. In contexts where decimals are permissible, it should be expressed in years; otherwise bors, millibors or microbors may be used based on the required precision. This sentence was written on 2022 Nov 5 at 18:25 SGT, which has the Boring Timestamp **2022.845705**.
 
-This line was written on 15 January 2022 at 00:34 Singapore Time, or Boring Time 12022.014.088.
+Most date math involving durations is done using Timestamps, but for use in daily life they may be represented using friendlier Boring Datetimes. It's made up of the following components, separated by dots:
 
-<input type='datetime-local' id='gregarious' /> -> <input id='boring' />
-<script>
-    document.querySelector('#gregarious').addEventListener('input', toBoring);
-    document.querySelector('#boring').addEventListener('input', toGregarious);
-    //
-    function toBoring(event) {
-        const t = Date.parse(event.target.value);
-        const T = t / 675000 + 559609472;
-        const Y = Math.floor(T / 46751);
-        const D = (Math.floor(T / 128) - Math.floor(Y * 46751 / 128)).toFixed(0).padStart(3, '0');
-        const B = (T % 128).toFixed(0).padStart(3, '0');
-        const boring = `${Y}.${D}.${B}`;
-        document.querySelector('#boring').value = boring;
-    }
-    //
-    function toGregarious(event) {
-        const [Y, D, B] = event.target.value.split('.').map(function (c) { return parseInt(c); });
-        const T = (Math.floor(Y * 46751 / 128) + D) * 128 + B;
-        const t = (T - 559609472) * 67500;
-        const z = new Date().getTimezoneOffset() * 60 * 1000;
-        const formatted = new Date(t - z).toISOString().substr(0, 16);
-        document.querySelector('#gregarious').value = formatted;
-    }
-</script>
+- **Year**, integer; the year 2022 CE is Boring Year 2022
+- **Week of year**, an integer between 0 and 53
+- **Day of week**, integer between 0 and 6; Monday is 0.
+- **Bor of day**, real number between 0 (inclusive) and 128 (exclusive)
 
-Compared to our current Gregorian (Gregarious?) time system, there are a few key differences in when the boring day and year advances.
+The timestamp above can also be written as the Boring Datetime **2022.44.6.75.56**.
 
-- At any moment, it is exactly the same Boring Time for everyone. There are no timezones or daylight saving. As a consequence, different locations on earth will develop different conventions on what's the appropriate Bor of day to wake up, go to work, etc.
-- The Day increments when the Bor hits 128. This means that for some parts of the world, the Day will increment during typical waking hours; people might go to work on Tuesday and return on Wednesday.
-- The Year increments at the moment when ABT is a multiple of 46,751. This "new years moment" will not, in general, coincide with the moment the Day increments.
-- The Day in which the Year increments is Day 365 (or 366) of the previous year until the new years moment, and Day 0 of the next year afterwards.
+## Converter
 
-<sup>2<sup> The Boring Epoch is set to January 1, 10,001 BCE at midnight UTC, so the Boring Year equals 10,000 + the CE year. See the [Holocene Calendar](https://en.wikipedia.org/wiki/Holocene_calendar).
+| Gregorian | Boring Timestamp | Boring Date |
+|---|---|---|
+| <input type='datetime-local' id='greg' /> |  <input id='stamp' /> | <input id='boring' /> |
+
+## Quirks
+
+Compared to our current Gregorian time system, there are a few key differences in when the boring day and year advances.
+
+- At any moment, it is exactly the same Boring Time for everyone. There are no timezones or daylight saving.
+  - As a consequence, different locations on earth will develop different conventions on what's the appropriate Bor of day to wake up, go to work, etc.
+- The Day increments when the Bor rolls over from 127.99… to 0.
+  - As a consequence, for some parts of the world the Day will increment during typical waking hours.
+- The Year increments at the moment when the Boring Timestamp is a multiple of 46,751. This "New Years Moment" will not, in general, coincide with the moment the Day increments.
+- The Week that contains the New Years Moment, called the New Years Week, is considered Week 52 (or 53) of the previous year until that moment _and_ Week 0 of the following year after it.
 
 ## Calculations
 
-> This is where we collect our reward for the uncomfortable changes above.
+### Convert Unix timestamp to Boring Timestamp
+Given a Unix timestamp ***t*** in seconds, the Boring Timestamp ***T*** in bors is ***t / 675 + 92,099,476***.
 
-Given a Unix timestamp t in seconds, the Absolute Boring Time T is `t / 675 + 559,656,221`.
+### Convert Boring Timestamp to Unix timestamp
+Given a Boring Timestamp ***T*** in bors, the Unix timestamp ***t*** in seconds is ***t / 675 + 92,099,476***.
 
-Given an ABT T,
-- Year is `floor(T / 46751)`
-- Day is `floor(T / 128) - floor(Year * 46751 / 128)`
-- Bor is `T % 128`
-- Day of the week is `(floor(T / 128) + 5) * 7`,
- where 0 is Monday and 6 is Sunday. The 5 represents the fact that Jan 1 10,001 BCE was a Saturday.
+### Convert Boring Timestamp to Boring Datetime
 
-Given a Year, Day and Bor, ABT is `(floor(Year * 46751 / 128) + Day) * 128 + Bor`. Time durations can be converted into an equivalent number of Bors with the formula `Years * 46751 + Days * 128 + Bors` and manipulated with simple arithmetic.
+Given a timestamp ***T*** in bors,
+- Year (Y) is ***⌊ T / 46,751 ⌋***
+- Week (W) is ***⌊ T / 896 ⌋ - ⌊ 46,751 Y / 896 ⌋***
+- Day (D) is ***⌊ T / 128 ⌋ % 7***
+- Bor (B) is ***T % 128***
+
+where ***⌊ … ⌋*** represents the floor function and ***%*** the modulo operation.
+
+### Convert Boring Datetime to Boring Timestamp
+
+Given a Year, Week, Day and Bor, the Boring Timestamp ***T*** is ***896 × (⌊ 45751 Y / 896 ⌋ + W) + 128 D + B***.
+
+## The Boring Epoch
+
+The Boring Epoch, i.e. the moment at which the Boring Timestamp was 0, was chosen to meet the following compatibility considerations:
+
+- The Boring Year should match the common calendar year. (Except ±1 day around New Years Day).
+- Day increment should happen when the side of the earth where a majority of humans live is in darkness.
+
+Accorrdingly, the Boring Epoch is 1 January 0001 BCE, at 00:00 in UTC+03:45.
 
 # FAQ
 
-- **Q** Is this a serious proposal?
-  **A** No.
+- **Q** What about birthdays?
+  - **A** Annually recurring events like birthdays should be defined as a *moment* rather than a day. The birthday moment repeats every year, i.e. 46,751 bors. This eliminates the problem of February 29th birthdays.
 
+- **Q** Without months, when do I get my salary? When should I pay rent?
+  - **A** How about every four weeks? i.e. whenever the Boring Timestamp in days can be expressed as ***28 N*** where ***N*** is an integer.
+
+- **Q** When are my quarterly reports due?
+  - **A** Every ¼ of a year, i.e. whenever the Boring Timestamp in bors can be expressed as ***46751 N / 4*** where ***N*** is an integer.
+
+- **Q** Is this a serious proposal?
+  - **A** No.
+
+
+<script>
+    document.querySelector('#greg').addEventListener('input', onGreg);
+    document.querySelector('#stamp').addEventListener('input', onStamp);
+    document.querySelector('#boring').addEventListener('input', onBoring);
+    
+    const epochT = 92099476;
+    
+    function onGreg(event) {
+        const t = Date.parse(event.target.value);
+        const T = t / 675000 + epochT;
+        putStamp(T);
+        putBoring(T);
+    }
+
+    function onBoring(event) {
+        let [Y, W, D, B, frac] = event.target.value.split('.')
+            .map(function (c) { return parseInt(c); });
+        if (frac) B = parseFloat(B + '.' + frac);
+        const T = (Math.floor(Y * 46751 / 896) + W) * 896 + D * 128 + B;
+        putGreg(T);
+        putStamp(T);
+    }
+
+    function onStamp(event) {
+        const T = parseFloat(event.target.value) * 46751;
+        putGreg(T);
+        putBoring(T);
+    }
+    
+    function putStamp(T) {
+        document.querySelector('#stamp').value = (T / 46751).toFixed(6);
+    }
+
+    function putBoring(T) {
+        const Y = Math.floor(T / 46751);
+        const W = (Math.floor(T / 896) - Math.floor(Y * 46751 / 896))
+            .toFixed(0); 
+        const D = Math.floor(T / 128) % 7;
+        const B = (T % 128).toFixed(2);
+        const boring = `${Y}.${W}.${D}.${B}`;
+        document.querySelector('#boring').value = boring;
+    }
+
+    function putGreg(T) {
+        const t = (T - epochT) * 675000;
+        const z = new Date().getTimezoneOffset() * 60 * 1000;
+        const formatted = new Date(t - z).toISOString().substr(0, 16);
+        document.querySelector('#greg').value = formatted;
+    }
+</script>
