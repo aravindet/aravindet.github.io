@@ -10,14 +10,14 @@
 	:root {
 		--bg: #000;
 		--fg: #fff;
-		--f2: #666;	
+		--f2: #666;
 	}
 }
 
 body {
 	padding: 4rem 2rem;
 	margin: 0 auto;
-	font: 300 15px/19px 'IBM Plex Mono',monospace;
+	font: 300 15px/19px 'IBM Plex Mono', monospace;
 	display: flex;
 	flex-flow: row;
 	justify-content: center;
@@ -37,36 +37,98 @@ main {
 	flex: 1 1 0;
 }
 
-table,th,td {
+table,
+th,
+td,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
 	font: inherit;
 }
 
-h1,h2,h3,h4,h5,h6 {
-	font: inherit;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+table,
+div {
 	padding: 0;
 	margin: 0;
+	margin-block-start: 1rem;
+	margin-block-end: 1rem;
 }
 
-h1 { font-weight: 700; }
-h2 { font-weight: 600; }
-h3 { font-weight: 500; }
-h4 { font-weight: 400; }
-h5 { font-weight: 300; font-style: italic; }
-h6 { font-weight: 300; font-style: italic; }
+h1 {
+	margin-block-start: 3rem;
+	font-weight: 700;
+}
+
+h2 {
+	margin-block-start: 2rem;
+	font-weight: 600;
+}
+
+h3 {
+	font-weight: 500;
+}
+
+h4 {
+	font-weight: 400;
+}
+
+h5 {
+	font-weight: 300;
+	font-style: italic;
+}
+
+h6 {
+	font-weight: 300;
+	font-style: italic;
+}
 
 th {
 	font-weight: 500;
 }
+
 td {
 	vertical-align: top;
 }
-ul,ol {
-	white-space:normal;
-	margin: 19px 0;
+
+ul,
+ol {
 	padding: 0;
+	padding-inline-start: 1rem;
+}
+
+li {
+	padding-inline-start: 0.5rem;
+}
+
+li:last-child {
+	margin-block-end: 1rem;
+}
+
+li:first-child {
+	margin-block-start: 1rem;
+}
+
+strong {
+	font-weight: 500;
+}
+
+nav ul {
+	padding-inline-start: 0;
 }
 
 nav li {
+	padding-inline-start: 0;
 	list-style-type: none;
 }
 
