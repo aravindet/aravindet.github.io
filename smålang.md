@@ -3,6 +3,13 @@ title: Smålang
 marp: true
 ---
 
+<style>
+  pre, code {
+    font-weight: 300;
+    font-family: 'Cascadia Code', monospace;
+  }
+</style>
+
 # Smålang
 
 A **small**, structurally typed, embeddable **lang**uage for JSON-to-JSON transformation.
@@ -40,7 +47,7 @@ Unlike types, Smålang abstract values are first-class: they can be bound to nam
 
 ---
 
-## Objects are functions
+## Objects and functions are tables
 
 All values in Smålang can be called, like functions; what that does varies.
 
@@ -50,7 +57,7 @@ When JSON objects are called with string keys as arguments, they return the corr
 fibonacci <- {
     0: 1,
     1: 1,
-    int -> n: fibonacci(n - 1) + (fibonacci(n - 2))
+    int -> n: fibonacci(n - 1) + fibonacci(n - 2)
     # The key here is "int"; we’ll discuss the "-> n" soon.
 }
 ```
@@ -77,22 +84,33 @@ fibonacci <- {
 
 - Everything in JSON: `"`, `{`…`}`, `[`…`]`, `:`, `,`
 - The `->` and `<-` operators for binding values to names
-- _Postfix functions_, declared with `{:` instead of `{`
-- Function calls: `sqrt 9` (or `9 sqrt` for postfix functions)
+- Function calls: `sqrt 9` (or `9!`)
 - Parentheses for specifying order-of-operations
 - Semicolons to end declarations
-- The rest/spread operator `...`
+- The type manipulation operators `&`, `|` and `?`
+
+And that’s pretty much it!
 
 ---
 
-## So it _doesn’t_ have:
+## What makes it Smål?
 
-- Keywords. `true`, `null`, `int` etc. are values from the standard library.
-- Any other operators. `+`, `=`, `<=` are functions from the standard library.
+It _doesn’t_ have:
+
+- Any keywords or operators. `true`, `null`, `int`, `+`, `=`, `<=` etc. are all functions from the standard library.
 - Conditionals (`if`, `switch`, `match`) and loops (`for`, `while`).
-- Special operator precedence.
+- Complex operator precedence rules.
 - Exception handling (`try`…`catch`)
 - Nominal typing, inheritance, classes, interfaces, traits, …
+
+---
+
+## Identifiers and operators
+
+- Smålang has typical identifiers like `foo_Bar12`. All words are valid identifiers, there are no reserved keywords.
+- It also allows defining operators, like `+` and `<=`. They may not contain the characters `{`, `}`, `:`, `"`, `,` and `;`, and must not _be_ `->`, `<-`, `&`, `|` or `?`.
+- Mixing characters from the identifier and operator character sets isn’t allowed. A string like `foo-bar` is parsed as three identifiers `foo`, `-` and `bar`. 
+- TODO: Specify exact characters in line with [Unicode TR31](https://www.unicode.org/reports/tr31)
 
 ---
 
@@ -132,6 +150,38 @@ You can “de-structure” and match on parts too.
 
 ---
 
+## Match / Bind Sugar
+
+```rb
+{ a: ... }
+```
+- If `a` is already defined in the parent scope, match its value.
+- Otherwise, matches any value and bind to `a`. (i.e. it desugars to `{ any -> a: ... }`), 
+
+```rb
+{ { a }: ... }
+```
+- If `a` is defined in the parent scope, this desugars to `{ { "a": a }: ... }`
+- Otherwise, it desugars to `{ { "a": any -> a }: ... }`
+
+---
+
+## Rest / Spread
+
+To specify to the “all remaining branches” of a function when constructing it or matching against it, use `|`. This is equivalent to the `...` operator in JavaScript.
+
+```rb
+{ x: { "foo": x } | some_object }
+```
+Here, “some object” is (shallow) merged with the object `{ "foo": x }`.
+
+```rb
+{ { foo: x } | a: ... }
+```
+Assuming `a` is not already in scope, this removes the property “foo” from the input and binds the remainder to `a`.
+
+---
+
 ## Declarations
 
 These help break down computations into separate steps, and bind intermediate values to names. An example:
@@ -151,7 +201,7 @@ These help break down computations into separate steps, and bind intermediate va
 
 ## Expressions
 
-Expressions are sequences of values and are evaluated left-to-right, with no operator precedence.
+Expressions are sequences of values that are mostly evaluated left-to-right without arbitrary rules like PEDMAS.
 
 ```rb
 1 + 1 * 2   # Unlike most other languages, this is 4.
@@ -160,21 +210,16 @@ Expressions are sequences of values and are evaluated left-to-right, with no ope
 
 Given a sequence `foo bar baz`, Smålang will evaluate it as `(foo bar) baz`.
 
-Normally, `foo bar` evaluates `foo` with the argument `bar`. However if `bar` is a _postfix function_, it evaluates `bar` with the argument `foo` instead.
+Parentheses can be used to alter the evaluation order.
 
 ---
 
-## Postfix functions
+## Operators
 
-Here's factorial implemented as a normal function
-```rb
-factorial <- { 1: 1, num -> n: factorial (n - 1) * n }
-```
+Normally, the function on the left is evaluated with the argument on the right; e.g. `factorial(3)` evaluates the function `factorial` with the argument `3`. However when there’s an operator, say `3!`, it does the reverse and evaluates the `!` function with the argument `3` instead.
 
-and as a postfix function named `!`
-```rb
-! <- {: 1: 1, num -> n: (n - 1)! * n }
-```
+
+In the absence of parentheses, runs of identifiers are evaluated before operators. E.g. `foo bar + baz qux` is evaluated as `((foo bar) +)(baz qux)`. The `+` operator is called with the result of invoking `foo` with the argument `bar`. The operator returns an anonymous function, which is then called with the result of calling `baz` with `qux`.
 
 ---
 
@@ -187,16 +232,16 @@ and as a postfix function named `!`
 
 ---
 
-## &, | and refinement
+## &, | and ?
 
 - Recap: abstract values are *sets* of concrete values
 - When `foo` _matches_ `bar`, it means `foo` is a subset of `bar`
 - `|` and `&` operators perform the union and intersection operations
-- `&` with a boolean expression using bound values performs _refinement_
+- `?` with a boolean expression using bound values performs _refinement_, removing concrete values that make the expression false. 
 
   ```rb
   {
-    int -> n & n > 0 : ... # Do something with n, a positive integer
+    int -> n ? n > 0 : ... # Do something with n, a positive integer
   }
   ```
 
@@ -219,6 +264,20 @@ with a mix of postfix and prefix functions so we can write `1 + 1`.
 
 ---
 
+## Regular expressions
+
+Written as `re "foo.*"` or `ri"foo.*/gi"`. `re` is a function from the standard library. The string passed to it doesn’t have to be a literal.
+
+Regexes can be used as match expressions:
+
+```rb
+{
+  re"^a.*": "This string has "
+}
+```
+
+---
+
 ## Iteration
 
 The basic idea is to have functions like filter, map and reduce. Details TBD.
@@ -226,6 +285,7 @@ The basic idea is to have functions like filter, map and reduce. Details TBD.
 ---
 
 # Todo
-
 - Refine the syntax and remove rough edges
+- Build an interpreter
+- Build a type analyzer to detect type errors
 - Add an effect system for doing IO, exceptions, futures

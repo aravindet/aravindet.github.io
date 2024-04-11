@@ -1,0 +1,120 @@
+rules <- [
+    {
+        "role": "Potential Executive Sponsor",
+        "titleRegex": /(\s|^)(CEO|Chairman|CMO|CIO|CDO|Chief Digital Officer)(\s|$)/i
+    },
+    {
+        "role": "Potential Champion",
+        "titleRegex": /(\s|^)(Marketing|Product|Design|Technology|Operations|IT)(\s|$)/i,
+        'inboundEmailsGte': 6,
+        "emailDays": 30
+    },
+    {
+        "role": "Potential Champion",
+        "titleRegex": /(\s|^)(Marketing|Product|Design|Technology|Operations|IT)(\s|$)/i,
+        'eventsGte': 2,
+        "eventDays": 30
+    },
+    {
+        "role": "Potential Influencer",
+        "titleRegex": /(\s|^)(Marketing|Product|Design|Technology|Operations|IT)(\s|$)/i,
+        'inboundEmailsGte': 4,
+        "emailDays": 30
+    },
+    {
+        "role": "Potential Influencer",
+        "titleRegex": /(\s|^)(Marketing|Product|Design|Technology|Operations|IT)(\s|$)/i,
+        'eventsGte': 1,
+        "eventDays": 30
+    },
+    {
+        "role": "Potential Passive Stakeholder",
+        "titleRegex": /(\s|^)(Marketing|Product|Design|Technology|Operations|IT)(\s|$)/i,
+        "outboundEmailsGte": 4,
+        "emailDays": 60
+    }
+];
+
+replaceableTags <- reduce(rules, {
+    [any -> acc, { "role": any -> role }]: acc + { "role:" role : 1 }
+}, {})
+
+
+$day := 24 * 60 * 60 * 1000;
+
+$isWithin := function ($time, $days) {
+    $not($days) or $not($isPast($time + $days * $day)) 
+}; 
+
+$getInboundEmailCount := function($personId, $emailDays) {
+    $getActivities()[
+        persons ~> $lookup($personId) ~> $exists
+        and $isWithin(time, $emailDays)
+        and type = 'email'
+        and tags.incoming
+    ] ~> $count
+};
+
+$getOutboundEmailCount := function($personId, $emailDays) {
+    $getActivities()[
+        persons ~> $lookup($personId) ~> $exists
+        and $isWithin(time, $emailDays)
+        and type = 'email'
+        and tags.outgoing
+    ] ~> $count
+};
+
+$getEventCount := function($personId, $eventDays) {
+    $getActivities()[
+        persons ~> $lookup($personId) ~> $exists
+        and $isWithin(time, $eventDays)
+        and type = 'event'
+    ] ~> $count
+};
+
+$doesRuleMatch := function($person, $rule) {
+    (
+        $rule.titleRegex ~> $exists and $person.jobTitle and
+        $person.jobTitle ~> $contains($rule.titleRegex)
+    )
+    and (
+        $not($rule.inboundEmailsGte ~> $exists)
+        or $getInboundEmailCount($person.id, $rule.emailDays) >= $rule.inboundEmailsGte
+    ) 
+    and (
+        $not($rule.eventsGte ~> $exists)
+        or $getEventCount($person.id, $rule.eventDays) >= $rule.eventsGte
+    )
+    and (
+        $not($rule.outboundEmailsGte ~> $exists)
+        or $getOutboundEmailCount($person.id, $rule.emailDays) >= $rule.outboundEmailsGte
+    )
+};
+
+$isUpdateable := function($personTags) {
+    $not($keys($personTags)[$contains($, /^role\:/)] ~> $exists)
+    or $replaceableTags[$personTags ~> $lookup($)] ~> $boolean
+};
+
+$getPerson := function($personId) {
+    $getPersons()[id=$personId][0]
+};
+
+$buildPerson := function($person, $role) {
+    $role and $isUpdateable($person.tags)
+    ? $person ~> | tags | {}, $replaceableTags |
+                ~> | tags | { 'role:' & $role: true } |
+    : $person
+};
+
+$updates := persons
+    ~> $each(function ($person, $personId) {
+        { $personId: $buildPerson(
+            $person,
+            $rules[$doesRuleMatch($getPerson($personId), $)][0].role
+        ) }
+    })
+    ~> $merge;
+
+
+$ ~> | persons | $updates |

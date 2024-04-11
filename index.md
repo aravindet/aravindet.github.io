@@ -12,5 +12,5 @@ title: aravind.rs
 - [Fluid Layout](fluid)
   A generic declarative layout specification unifying all the CSS layout modes.
 
-- <a href='smush'>Smush Language</a>
-  A minimal interpreted programming language designed for embedding in applications (like Lua). Optimized for small interpreter footprint and familiarity and ease of use.
+- [Smålang](smålang)
+  A small, functional, embedded language designed safely running user-defined JSON-to-JSON transformations within Node.js
