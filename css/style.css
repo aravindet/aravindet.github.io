@@ -6,7 +6,7 @@
 	--f2: #ddd;
 }
 
-@media (prefers-color-scheme:dark) {
+@media (prefers-color-scheme: dark) {
 	:root {
 		--bg: #000;
 		--fg: #fff;
@@ -17,7 +17,7 @@
 body {
 	padding: 4rem 2rem;
 	margin: 0 auto;
-	font: 300 15px/19px 'IBM Plex Mono', monospace;
+	font: 200 19px/24px 'IBM Plex Mono', monospace;
 	display: flex;
 	flex-flow: row;
 	justify-content: center;
@@ -37,6 +37,28 @@ main {
 	flex: 1 1 0;
 }
 
+@media (max-width: 80rem) {
+	nav {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+	nav li:not(:first-child) {
+		display: none;
+	}
+
+	nav:focus-within ul li {
+		display: block !important;
+	}
+
+	main {
+		margin-top: 10rem;
+	}
+}
+
 table,
 th,
 td,
@@ -46,7 +68,9 @@ h3,
 h4,
 h5,
 h6,
-p {
+p,
+code,
+pre {
 	font: inherit;
 }
 

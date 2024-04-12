@@ -12,7 +12,7 @@ marp: true
 
 # Smålang
 
-A **small**, structurally typed, embeddable **lang**uage for JSON-to-JSON transformation.
+A **small**, functional, structurally typed, embeddable **lang**uage for JSON-to-JSON transformation.
 
 > Named after Småland, the kids’ play area at Ikea.
 

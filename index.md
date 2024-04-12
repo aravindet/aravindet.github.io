@@ -13,4 +13,4 @@ title: aravind.rs
   A generic declarative layout specification unifying all the CSS layout modes.
 
 - [Smålang](smålang)
-  A small, functional, embedded language designed safely running user-defined JSON-to-JSON transformations within Node.js
+A **small**, functional, structurally typed, embeddable **lang**uage for JSON-to-JSON transformation.
