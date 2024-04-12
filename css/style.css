@@ -37,25 +37,16 @@ main {
 	flex: 1 1 0;
 }
 
-@media (max-width: 80rem) {
+@media (max-width: 50rem) {
+	body {
+		flex-flow: column;
+		align-items: stretch;
+	}
+
 	nav {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-	}
-
-	nav li:not(:first-child) {
-		display: none;
-	}
-
-	nav:focus-within ul li {
-		display: block !important;
-	}
-
-	main {
-		margin-top: 10rem;
+		border-right: none;
+		margin-right: 0;
+		margin-bottom: 3rem;
 	}
 }
 
@@ -115,6 +106,11 @@ h5 {
 h6 {
 	font-weight: 300;
 	font-style: italic;
+}
+
+pre,
+code {
+	font-weight: 300;
 }
 
 th {

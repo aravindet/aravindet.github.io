@@ -1,5 +1,5 @@
 ---
-<title: Fluid Layout
+title: Fluid Layout
 ---
 
 # Introduction
