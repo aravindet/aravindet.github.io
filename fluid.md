@@ -46,6 +46,7 @@ For example, a wrapping normal layout has two axes. The first axis does not cros
 
 ## Definition
 
+```
 flow: 'yield' | [ {
   direction: 'fore' | 'back' | 'left' | 'right' | 'up' | 'down'
 
@@ -58,6 +59,7 @@ flow: 'yield' | [ {
 
   crosses: [ integer ]
 } ]
+```
 
 # Place
 
@@ -73,6 +75,7 @@ The wrap_before and wrap_after properties control whether this item (or the succ
 
 ## Definition
 
+```
 place: {
   order: 'auto' | integer
   axes: [{
@@ -84,15 +87,16 @@ place: {
     wrap_after: 'never' | 'always' | number
   }]
 }
+```
 
-
+```
 length = {
   px: number
   em: number
   pc: number
   fr: number
 }
-
+```
 
 # Questions
 
