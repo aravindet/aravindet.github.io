@@ -26,7 +26,7 @@ body {
 }
 
 nav {
-	width: 15rem;
+	width: 18rem;
 	flex: 0 0 auto;
 	border-right: 1px solid var(--f2);
 	margin-right: 3rem;
@@ -158,22 +158,19 @@ nav li {
 
 a {
 	color: var(--fg);
-	text-decoration: underline;
 	font-weight: 400;
-}
-
-a:visited {
+	text-decoration: underline;
 	text-decoration-color: var(--f2);
 }
 
 input {
 	font: inherit;
 	border: 1px solid var(--fg);
-	padding: 9px 19px;
+	padding: calc(0.5rem - 1px) 1rem;
 }
 
 h1.title {
-	margin-top: 19px;
-	margin-bottom: 18px;
+	margin-top: 1rem;
+	margin-bottom: calc(1rem - 1px);
 	border-bottom: 1px solid var(--fg);
 }
