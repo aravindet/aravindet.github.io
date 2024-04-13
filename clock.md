@@ -79,7 +79,7 @@ where ***⌊ … ⌋*** represents the floor function and ***%*** the modulo ope
 
 ### Convert Boring Datetime to Boring Timestamp
 
-Given a Year, Week, Day and Bor, the Boring Timestamp ***T*** is ***896 × (⌊ 45751 Y / 896 ⌋ + W) + 128 D + B***.
+Given a Year, Week, Day and Bor, the Boring Timestamp ***T*** is ***896 × (⌊ 46,751 Y / 896 ⌋ + W) + 128 D + B***.
 
 ## The Boring Epoch
 
