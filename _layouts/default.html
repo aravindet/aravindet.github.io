@@ -12,7 +12,12 @@
 <body>
     <nav>
         <ul>
-            <li class="home"><a href="/">aravind.rs</a></li>
+            <li class="home">
+                <a href="/">
+                    <span class="icon">🡸</span>
+                    <span class="text">aravind.rs</span>
+                </a>
+            </li>
             {% for category in site.data.index %}
             <li class="category">{{ category.title }}</li>
             {% for page in category.pages %}
