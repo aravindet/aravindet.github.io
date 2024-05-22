@@ -1,5 +1,6 @@
 ---
 title: Fluid Layout
+layout: default
 ---
 
 # Introduction

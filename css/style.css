@@ -4,6 +4,9 @@
 	--bg: #fff;
 	--fg: #000;
 	--f2: #ddd;
+
+	/* This is to set the "rem" unit. */
+	font-size: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,14 +29,14 @@ body {
 }
 
 nav {
-	width: 18rem;
+	width: 12rem;
 	flex: 0 0 auto;
 	border-right: 1px solid var(--f2);
 	margin-right: 3rem;
 }
 
 main {
-	max-width: 50rem;
+	max-width: 36rem;
 	flex: 1 1 0;
 }
 
@@ -115,6 +118,7 @@ h6 {
 pre,
 code {
 	font-weight: 300;
+	background-color: var(--b2);
 }
 
 th {
@@ -147,8 +151,25 @@ strong {
 	font-weight: 500;
 }
 
+hr {
+	border: none;
+	border-bottom: 1px solid var(--f2);
+	width: 100%;
+	margin: 0.5rem auto calc(0.5rem - 1px) auto;
+}
+
+
+
 nav ul {
 	padding-inline-start: 0;
+}
+
+nav li.home a {
+	font-weight: 700;
+}
+
+nav li.category {
+	padding-block-start: 2rem;
 }
 
 nav li {
@@ -173,4 +194,5 @@ h1.title {
 	margin-top: 1rem;
 	margin-bottom: calc(1rem - 1px);
 	border-bottom: 1px solid var(--fg);
+	text-align: center;
 }

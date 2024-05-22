@@ -15,6 +15,25 @@
         <section>
             {{ content }}
         </section>
+        <section>
+            {% for category in site.data.index %}
+            <h1>{{ category.title }}</h1>
+            <p>{{category.tagline}}</p>
+            <ul>
+                {% for page in category.pages %}
+                <li>
+                    <p>
+                        <a href="{{ page.url }}">{{ page.title }}</a>
+                        {% if page.github_url %}
+                        <a href="{{ page.github_url }}">🐙</a>
+                        {% endif %}
+                        {{page.tagline}}
+                    </p>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </section>
     </main>
 </body>
 

@@ -11,7 +11,15 @@
 
 <body>
     <nav>
-        {% include index.md %}
+        <ul>
+            <li class="home"><a href="/">aravind.rs</a></li>
+            {% for category in site.data.index %}
+            <li class="category">{{ category.title }}</li>
+            {% for page in category.pages %}
+            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
     </nav>
     <main>
         <h1 class="title">{{ page.title }}</h1>

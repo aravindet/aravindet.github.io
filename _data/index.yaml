@@ -1,0 +1,34 @@
+
+- title: Projects
+  tagline: In various states of completion
+  pages:
+  - title: Graffy
+    url: https://graffy.org
+    github_url: https://github.com/usegraffy/graffy
+    tagline: A Javascript library for realtime data fetching and optimally synchronizing parts of a graph across devices.
+  - title: FruitFont Editor
+    url: https://aravind.rs/fruitfont/
+    github_url: https://github.com/aravindet/fruitfont
+    tagline: A visual editor for Adafruit GFX Fonts. Generates C code
+  - title: React Size Transition
+    url: https://github.com/aravindet/react-size-transition
+    tagline: Smoothly transition container dimensions when content changes
+
+- title: Half-baked Ideas
+  pages:
+  - title: Fluid Layout
+    url: fluid
+    tagline: A generic declarative layout specification unifying all the CSS layout modes
+  - title: Smålang
+    url: smålang
+    tagline: A **small**, functional, structurally typed, embeddable **lang**uage for JSON-to-JSON transformation
+
+- title: Experiments
+  pages:
+  - title: Boring Clock
+    url: clock
+    tagline: A humble proposal for overhauling how humans track time
+  - title: Primeval Numbers
+    url: numbers
+    tagline: A strange way to draw numbers
+
