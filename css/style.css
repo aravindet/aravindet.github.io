@@ -235,10 +235,30 @@ a {
 	text-decoration-color: var(--f2);
 }
 
-input {
+input:not([type="checkbox"]),
+select,
+textarea {
 	font: inherit;
-	border: 1px solid var(--fg);
+	color: var(--fg);
+	border: 1px solid var(--f2);
+	background: var(--bg);
 	padding: calc(0.5rem - 1px) 1rem;
+}
+
+input:not([type="checkbox"]):focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline: none;
+	border-color: var(--fg);
+}
+
+label {
+	flex: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	line-height: 1rem;
+	padding: 1rem 1px 0 1px;
 }
 
 h1.title {

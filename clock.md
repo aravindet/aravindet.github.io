@@ -10,6 +10,16 @@ The way humans keep time is unnecessarily complicated. Time should be more borin
 
 This is a method of measuring time and date that makes calculations dead simple. That means no timezones, daylight saving time, leap years, leap seconds and other weirdness.
 
+## Playground
+
+<div class="clock-converter">
+  <label>Gregorian Date & Time (Local)<input type='datetime-local' step='1' id='greg' /></label>
+  <label>Boring Date & Time<input id='boring' size='18' /></label>
+  <label>Boring Timestamp<input id='stamp' size='14' /></label>
+</div>
+
+Change any value to stop the clock. Clear any value to resume.
+
 ## The Coincidence
 
 The ratio of the lengths of the year and day<sup>1</sup>, 365.2422, can be very closely approximated by the fraction 46,751 / 128. We'll make use of this fact.
@@ -41,12 +51,6 @@ Most date math involving durations is done using Timestamps, but for use in dail
 - **Bor of day**, real number between 0 (inclusive) and 128 (exclusive)
 
 The timestamp above can also be written as the Boring Datetime **2022.44.6.75.56**.
-
-## Converter
-
-| Gregorian | Boring Timestamp | Boring Date |
-|---|---|---|
-| <input type='datetime-local' id='greg' /> |  <input id='stamp' /> | <input id='boring' /> |
 
 ## Quirks
 
@@ -104,6 +108,14 @@ Accorrdingly, the Boring Epoch is 1 January 0001 BCE, at 00:00 in UTC+03:45.
 - **Q** Is this a serious proposal?
   - **A** No.
 
+<style>
+  .clock-converter {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: stretch;
+  }
+</style>
 
 <script>
     document.querySelector('#greg').addEventListener('input', onGreg);
@@ -111,47 +123,107 @@ Accorrdingly, the Boring Epoch is 1 January 0001 BCE, at 00:00 in UTC+03:45.
     document.querySelector('#boring').addEventListener('input', onBoring);
     
     const epochT = 92099476;
+    const yearBor = 46751;
+    const borMs = 675000;
+    const mBorMs = borMs / 1000;
     
+    let gregTimer = null;
+    let stampTimer = null;
+    let boringTimer = null;
+    function setNowGreg() {
+      const d = new Date();
+      const greg = d.toISOString().substr(0, 19);
+      document.querySelector('#greg').value = greg;
+      gregTimer = setTimeout(setNowGreg, 1000 - d.getTime() % 1000);
+    }
+
+    function setNowStamp() {
+      const t = Date.now();
+      const T = t / borMs + epochT;
+
+      putStamp(T);
+      const scale = 1e8 / (yearBor * borMs);
+      const delay = Math.round(t * scale + 0.5) / scale - t;
+      stampTimer = setTimeout(setNowStamp, delay);
+    }
+
+    function setNowBoring() {
+      const t = Date.now();
+      const T = t / borMs + epochT;
+      putBoring(T);
+      boringTimer = setTimeout(setNowBoring, mBorMs - t % mBorMs);
+    }
+
+    function startClock() {
+      setNowBoring();
+      setNowStamp();
+      setNowGreg();
+    }
+
+    function stopClock() {
+      clearTimeout(gregTimer);
+      clearTimeout(stampTimer);
+      clearTimeout(boringTimer);
+    }
+
     function onGreg(event) {
-        const t = Date.parse(event.target.value);
-        const T = t / 675000 + epochT;
-        putStamp(T);
-        putBoring(T);
+      if (!event.target.value) {
+        startClock();
+        return;
+      }
+      stopClock();
+      const t = Date.parse(event.target.value);
+      const T = t / borMs + epochT;
+      putStamp(T);
+      putBoring(T);
     }
 
     function onBoring(event) {
-        let [Y, W, D, B, frac] = event.target.value.split('.')
-            .map(function (c) { return parseInt(c); });
-        if (frac) B = parseFloat(B + '.' + frac);
-        const T = (Math.floor(Y * 46751 / 896) + W) * 896 + D * 128 + B;
-        putGreg(T);
-        putStamp(T);
+      if (!event.target.value) {
+        startClock();
+        return;
+      }
+      stopClock();
+      let [Y, W, D, B, frac] = event.target.value.split('.')
+          .map(function (c) { return parseInt(c); });
+      if (frac) B = parseFloat(B + '.' + frac);
+      const T = (Math.floor(Y * yearBor / 896) + W) * 896 + D * 128 + B;
+      putGreg(T);
+      putBoring(T);
+      putStamp(T);
     }
 
     function onStamp(event) {
-        const T = parseFloat(event.target.value) * 46751;
-        putGreg(T);
-        putBoring(T);
+      if (!event.target.value) {
+        startClock();
+        return;
+      }
+      stopClock();
+      const T = parseFloat(event.target.value) * yearBor;
+      putGreg(T);
+      putBoring(T);
     }
     
     function putStamp(T) {
-        document.querySelector('#stamp').value = (T / 46751).toFixed(6);
+      document.querySelector('#stamp').value = (T / yearBor).toFixed(8);
     }
 
     function putBoring(T) {
-        const Y = Math.floor(T / 46751);
-        const W = (Math.floor(T / 896) - Math.floor(Y * 46751 / 896))
-            .toFixed(0); 
-        const D = Math.floor(T / 128) % 7;
-        const B = (T % 128).toFixed(2);
-        const boring = `${Y}.${W}.${D}.${B}`;
-        document.querySelector('#boring').value = boring;
+      const Y = Math.floor(T / yearBor);
+      const W = (Math.floor(T / 896) - Math.floor(Y * yearBor / 896))
+          .toFixed(0); 
+      const D = Math.floor(T / 128) % 7;
+      const B = (T % 128).toFixed(3);
+      const boring = `${Y}.${W}.${D}.${B}`;
+      document.querySelector('#boring').value = boring;
     }
 
     function putGreg(T) {
-        const t = (T - epochT) * 675000;
-        const z = new Date().getTimezoneOffset() * 60 * 1000;
-        const formatted = new Date(t - z).toISOString().substr(0, 16);
-        document.querySelector('#greg').value = formatted;
+      const t = (T - epochT) * borMs;
+      const z = new Date().getTimezoneOffset() * 60 * 1000;
+      const formatted = new Date(t - z).toISOString().substr(0, 16);
+      document.querySelector('#greg').value = formatted;
     }
+
+    startClock();
 </script>

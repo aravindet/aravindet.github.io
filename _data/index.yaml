@@ -12,6 +12,7 @@
     tagline: A visual editor for Adafruit GFX Fonts. Generates C code
   - title: React Size Transition
     url: https://github.com/aravindet/react-size-transition
+    github_url: https://github.com/aravindet/react-size-transition
     tagline: Smoothly transition container dimensions when content changes
 
 - title: Half-baked Ideas
