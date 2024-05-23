@@ -216,18 +216,16 @@ hr {
 }
 
 /* Prevent superscripts and subscripts from breaking the line height. */
-sup,
-sub {
-	vertical-align: baseline;
-	font-size: inherit;
-}
-
 sup {
-	font-variant-position: super;
+	font-size: 0.7937em;
+	line-height: 1em;
+	vertical-align: 0.2599em;
 }
 
 sub {
-	font-variant-position: sub;
+	font-size: 0.7937em;
+	line-height: 1em;
+	vertical-align: 0.1299em;
 }
 
 nav ul {
