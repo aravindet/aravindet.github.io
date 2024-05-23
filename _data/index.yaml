@@ -1,6 +1,5 @@
 
-- title: Projects
-  tagline: In various states of completion
+- title: Incomplete projects
   pages:
   - title: Graffy
     url: https://graffy.org
@@ -15,21 +14,24 @@
     github_url: https://github.com/aravindet/react-size-transition
     tagline: Smoothly transition container dimensions when content changes
 
-- title: Half-baked Ideas
+- title: Half-baked ideas
   pages:
-  - title: Fluid Layout
-    url: fluid
-    tagline: A generic declarative layout specification unifying all the CSS layout modes
   - title: Smålang
     url: smålang
     tagline: A **small**, functional, structurally typed, embeddable **lang**uage for JSON-to-JSON transformation
+  - title: Fluid Layout
+    url: fluid
+    tagline: A generic declarative layout specification unifying all the CSS layout modes
+  - title: LinnaeUI
+    url: linnae
+    tagline: A minimal, composable application UI framework.
 
-- title: Experiments
+- title: Pointless toys
   pages:
   - title: Boring Clock
     url: clock
     tagline: A humble proposal for overhauling how humans track time
   - title: Primeval Numbers
     url: numbers
-    tagline: A strange way to draw numbers
+    tagline: A strange new way to *draw* numbers.
 

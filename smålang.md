@@ -280,7 +280,7 @@ Regexes can be used as match expressions:
 
 ## Iteration
 
-The basic idea is to have functions like filter, map and reduce. Details TBD.
+The basic idea is to have optimized tail recursion, and to also include functions like filter, map and reduce in the standard library. Details TBD.
 
 ---
 

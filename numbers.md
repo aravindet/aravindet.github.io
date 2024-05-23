@@ -2,14 +2,15 @@
 title: Primeval numbers
 ---
 
-A method for writing numbers using their prime factors instead of place-value system. Inspired by [quipu](https://en.wikipedia.org/wiki/Quipu) and the [alien language in the 2016 movie _Arrival_](https://blog.wolfram.com/2017/01/31/analyzing-and-translating-an-alien-language-arrival-logograms-and-the-wolfram-language/).
+A method for writing numbers using their prime factors instead of digits. Visual design inspired by the [Inca record-keeping technology quipu](https://en.wikipedia.org/wiki/Quipu) and the [alien language in the 2016 movie _Arrival_](https://blog.wolfram.com/2017/01/31/analyzing-and-translating-an-alien-language-arrival-logograms-and-the-wolfram-language/).
 
 # Playground
 
-<label>Input number: <input id="number" type="number" min="2" step="1" value="60" /></label>
-<pre id="factors"></pre>
+<label>Input number: <input id="number" type="number" min="0" step="1" value="60" /></label>
+<pre id="factors" style="height: 2rem; text-align: center;"></pre>
 
-<svg viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="max-height: 50vh;">
+<svg viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+    style="display: block; margin: 0 auto; max-height: calc(50vh - mod(50vh, 1rem)); max-width: calc(100% - mod(100%, 1rem));">
   <defs>
       <marker
       id="dot"
@@ -18,25 +19,30 @@ A method for writing numbers using their prime factors instead of place-value sy
       refY="5"
       markerWidth="5"
       markerHeight="5">
-      <circle cx="5" cy="5" r="5" fill="currentcolor" />
+      <circle cx="5" cy="5" r="5" stroke="none" fill="currentcolor" />
     </marker>
   </defs>
-  <path id="thread" stroke="currentcolor" stroke-width="0.25" fill="none" marker-end="url(#dot)"
+  <path id="thread" stroke="currentcolor" stroke-width="0.2" fill="none" marker-end="url(#dot)"
  />
 </svg>
 
 # How it works
 
-- There are three “knot” symbols, which represent multiplication by
-  2&nbsp;(<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 6 6" style="vertical-align: bottom"><path d="M 3 1.5 c 1.5 0 2 3 0 3 s -1.5 -3 0 -3" fill="none" stroke="currentcolor" stroke-width="0.25" /></svg>), 3&nbsp;(<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 6 6" style="vertical-align: bottom"><path d="M 3 1 c 1.5 0 2 2 0 2 s -2 2 0 2 s 2 -2 0 -2 s -1.5 -2 0 -2" fill="none" stroke="currentcolor" stroke-width="0.25" /></svg>), 5&nbsp;(<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 6 6" style="vertical-align: bottom"><path d="M 3 1 c 2 0 0 4 -1.5 4 s -0.5 -2.5 1.5 -2.5 s 3 2.5 1.5 2.5 s -3.5 -4 -1.5 -4" fill="none" stroke="currentcolor" stroke-width="0.25" /></svg>).
-- A broken ring represents the multiplication all the knots, swooshes and rings on it. One with no knots represents 1, those with a single knot represent 2, 3, 5 or -1, and those with multiple knots etc. represent composite numbers.
-- Prime numbers larger than 5 are represented as 1 more than a composite number. The +1 here is indicated by closing the ring of the composite number.
-- Repeated factors can be compressed using exponention, which is indicated by a ring that encloses another. The outer ring is the exponent.
-- The "main ring" is indicated with a dot in the middle. The dot by itself represents 0.
+<style>
+    .nowrap {
+        white-space: nowrap;
+    }
+</style>
+
+- There are three _knots_, representing multiplication by
+  <span class="nowrap">2<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 6 6" style="vertical-align: bottom"><path d="M 3 1.5 c 1.5 0 2 3 0 3 s -1.5 -3 0 -3" fill="none" stroke="currentcolor" stroke-width="0.25" /></svg>,</span> <span class="nowrap">3<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 6 6" style="vertical-align: bottom"><path d="M 3 1 c 1.5 0 2 2 0 2 s -2 2 0 2 s 2 -2 0 -2 s -1.5 -2 0 -2" fill="none" stroke="currentcolor" stroke-width="0.25" /></svg>,</span> <span class="nowrap">5<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 6 6" style="vertical-align: bottom"><path d="M 3 1 c 2 0 0 4 -1.5 4 s -0.5 -2.5 1.5 -2.5 s 3 2.5 1.5 2.5 s -3.5 -4 -1.5 -4" fill="none" stroke="currentcolor" stroke-width="0.25" /></svg>.</span>
+- An incomplete ring represents the product of all the knots and rings connected to it. With no knots it represents 1; with a single knot it represent 2, 3 or 5. With multiple knots and connected rings, it represents a composite number.
+- Prime numbers larger than 5 are represented as a composite number + 1, by closing the ring of the corresponding composite number. Complete rings are only valid when the product of all their connected knots and rings is one less than a prime number.
+- Repeated factors can be compressed using exponention, which is indicated by a ring that encloses another. The outer ring is the exponent, which is encoded the same way as regular numbers.
+- The starting point of the first ring is indicated with a small teardrop shape, which indicates the direction along the string to read this number. The teardrop by itself represents 0.
 
 ## Future
-A fourth symbol for -1 is planned; with this addition, all rational numbers, as well as some irrational and complex numbers can be expressed.
-
+A fourth symbol for -1 is planned. In addition to negative numbers, this will unlock fractions (-1 as exponent), n<sup>th</sup> roots (fractional exponents), complex numbers (-1 raised to fractional exponents) and their products.
 
 <script>
     const known_primes = [5];
@@ -96,6 +102,8 @@ A fourth symbol for -1 is planned; with this addition, all rational numbers, as 
     }
 
     const knots = {
+        0: ['l', 0.01, 0],
+        1: ['a', 3, 3, 0, 1, 1, 0, 6, 'm', 0, -6],
         2: ['c', 1.5, 0, 2, 3, 0, 3, 's', -1.5, -3, 0, -3],
         3: ['c', 1.5, 0, 2, 2, 0, 2, 's', -2, 2, 0, 2, 's', 2, -2, 0, -2, 's', -1.5, -2, 0, -2],
         5: ['c', 2, 0, 0, 4, -1.5, 4,
