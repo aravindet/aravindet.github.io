@@ -69,7 +69,7 @@ Compared to our current Gregorian time system, there are a few key differences i
 Given a Unix timestamp ***t*** in seconds, the Boring Timestamp ***T*** in bors is ***t / 675 + 92,099,476***.
 
 ### Convert Boring Timestamp to Unix timestamp
-Given a Boring Timestamp ***T*** in bors, the Unix timestamp ***t*** in seconds is ***t / 675 + 92,099,476***.
+Given a Boring Timestamp ***T*** in bors, the Unix timestamp ***t*** in seconds is ***(T - 92,099,476) * 675***.
 
 ### Convert Boring Timestamp to Boring Datetime
 
